@@ -1,34 +1,24 @@
-import 'phaser';
+import Phaser from './../build/phaser.min.js'
+import LoadingScene from './scenes/LoadingScene'
+import HomeScene from './scenes/HomeScene'
+import GameScene from './scenes/GameScene'
 
 var config = {
     type: Phaser.AUTO,
     parent: 'phaser-example',
-    width: 800,
-    height: 600,
-    scene: {
-        preload: preload,
-        create: create
+    title: 'Emoji Pet',
+    pixelArt: false,
+    width: 360,
+    height: 580,
+    scene: [LoadingScene, HomeScene, GameScene],
+    physics: {
+    default: 'arcade',
+    arcade: {
+        gravity: { y: 300 },
+        // debug: true
     }
+}
 };
 
 var game = new Phaser.Game(config);
 
-function preload ()
-{
-    this.load.image('logo', 'assets/logo.png');
-}
-
-function create ()
-{
-    var logo = this.add.image(400, 150, 'logo');
-
-    this.tweens.add({
-        targets: logo,
-        y: 450,
-        duration: 2000,
-        ease: 'Power2',
-        yoyo: true,
-        loop: -1
-    });
-
-}
