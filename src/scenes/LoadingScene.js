@@ -1,18 +1,14 @@
-import { Scene } from '../../build/phaser.min.js'
+import { Scene } from 'phaser'
 
 class LoadingScene extends Scene {
   constructor() {
     super('load-scene')
   }
 
-  init() {
-    const isChrome = navigator.userAgent.includes('Chrome')
-  }
-
   preload() {
     const { width, height } = this.sys.game.config
 
-    const logo = this.add.text(width / 2, 200, "🤯", { font: "64px Sans Open" })
+    const logo = this.add.text(width / 2, 200, '🤯', { font: '64px Sans Open' })
       .setOrigin(0.5, 0.5);
 
     const barW = 150

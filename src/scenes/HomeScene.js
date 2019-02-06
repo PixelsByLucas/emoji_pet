@@ -1,4 +1,4 @@
-import { Scene } from '../../build/phaser.min.js'
+import { Scene } from 'phaser'
 
 class HomeScene extends Scene {
   constructor() {
@@ -8,20 +8,20 @@ class HomeScene extends Scene {
   renderBackground(width, height) {
     // create background
     const bg = this.add
-      .text(width / 2, 0, "🌁", { font: "322px Sans Open" })
+      .text(width / 2, 0, '🌁', { font: '322px Sans Open' })
       .setOrigin(0.5, 0)
       .setDepth(1)
       .setInteractive();
 
     // create trees
     const trees = this.add
-      .text(width / 2, height / 2, "🌲🌲🌲", { font: "100px Sans Open" })
+      .text(width / 2, height / 2, '🌲🌲🌲', { font: '100px Sans Open' })
       .setOrigin(0.5, 0)
       .setPadding({ top: 6 })
       .setDepth(2);
 
     this.garbage = this.add
-      .text(84, height - 176, '🗑️', { font: "48px Sans Open" })
+      .text(84, height - 176, '🗑️', { font: '48px Sans Open' })
       .setOrigin(0.5, 0)
       .setPadding({ top: 6 })
       .setDepth(2);
@@ -30,69 +30,69 @@ class HomeScene extends Scene {
     this.garbage.body.allowGravity = false
 
     // create flowers
-    const clover1 = this.add.text(width / 2 + 90, height / 2 + 125, '🍀', { font: "16px Sans Open" })
+    const clover1 = this.add.text(width / 2 + 90, height / 2 + 125, '🍀', { font: '16px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const clover2 = this.add.text(width / 2 + 70, height / 2 + 110, '🍀', { font: "16px Sans Open" })
+    const clover2 = this.add.text(width / 2 + 70, height / 2 + 110, '🍀', { font: '16px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const clover3 = this.add.text(width / 2 - 60, height / 2 + 120, '🍀', { font: "16px Sans Open" })
+    const clover3 = this.add.text(width / 2 - 60, height / 2 + 120, '🍀', { font: '16px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const clover4 = this.add.text(width / 2 + 10, height / 2 + 125, '🍀', { font: "14px Sans Open" })
+    const clover4 = this.add.text(width / 2 + 10, height / 2 + 125, '🍀', { font: '14px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const clover5 = this.add.text(width / 2 - 100, height / 2 + 130, '🍀', { font: "16px Sans Open" })
+    const clover5 = this.add.text(width / 2 - 100, height / 2 + 130, '🍀', { font: '16px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const clover6 = this.add.text(width / 2 + 150, height / 2 + 150, '🍀', { font: "12px Sans Open" })
+    const clover6 = this.add.text(width / 2 + 150, height / 2 + 150, '🍀', { font: '12px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const clover7 = this.add.text(width / 2 - 140, height / 2 + 160, '🍀', { font: "12px Sans Open" })
+    const clover7 = this.add.text(width / 2 - 140, height / 2 + 160, '🍀', { font: '12px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const flower1 = this.add.text(width / 2 - 70, height / 2 + 94, '🌼', { font: "24px Sans Open" })
+    const flower1 = this.add.text(width / 2 - 70, height / 2 + 94, '🌼', { font: '24px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const flower2 = this.add.text(width / 2 - 26, height / 2 + 110, '🌼', { font: "18px Sans Open" })
+    const flower2 = this.add.text(width / 2 - 26, height / 2 + 110, '🌼', { font: '18px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const flower3 = this.add.text(width / 2 - 100, height / 2 + 130, '🌼', { font: "24px Sans Open" })
+    const flower3 = this.add.text(width / 2 - 100, height / 2 + 130, '🌼', { font: '24px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const flower4 = this.add.text(width / 2 + 110, height / 2 + 136, '🌼', { font: "24px Sans Open" })
+    const flower4 = this.add.text(width / 2 + 110, height / 2 + 136, '🌼', { font: '24px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
-    const flower5 = this.add.text(width / 2 + 150, height / 2 + 110, '🌼', { font: "18px Sans Open" })
+    const flower5 = this.add.text(width / 2 + 150, height / 2 + 110, '🌼', { font: '18px Sans Open' })
       .setOrigin(0.5, 0.5)
       .setPadding({ top: 2 })
       .setDepth(1)
 
     // create clouds
     const clouds = this.add
-      .text(-90, 35, "☁", { font: "100px Sans Open", })
+      .text(-90, 35, '☁', { font: '100px Sans Open', })
       .setAlpha(0.7)
       .setDepth(2)
 
@@ -128,7 +128,7 @@ class HomeScene extends Scene {
     // create welcome text
     const text = this.add.text(
       width / 2, height / 2 - 80,
-       "😣EMOJI PET", { font: "40px Arial", fill: "#ffffff"}
+       '😣EMOJI PET', { font: '40px Arial', fill: '#ffffff'}
     )
     text.setOrigin(0.5, 0.5);
     text.depth = 10;
@@ -147,8 +147,8 @@ class HomeScene extends Scene {
     // tap to play text
     const clickText = this.add.text(
       width / 2, height / 2 - 20,
-      "tap to play!",
-      { font: "28px Arial", fill: "#ffffff" }
+      'tap to play!',
+      { font: '28px Arial', fill: '#ffffff' }
     )
       .setDepth(10)
       .setOrigin(0.5, 0.5)
@@ -163,7 +163,6 @@ class HomeScene extends Scene {
         clickText.width + 20,
         clickText.height + 20
       )
-
 
     this.input.on('pointerdown', function() {
       this.scene.start('game-scene', { renderBackground: this.renderBackground });

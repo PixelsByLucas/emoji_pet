@@ -1,11 +1,12 @@
-import Phaser, { Scene } from '../../build/phaser.min.js'
+import Phaser, { Scene } from 'phaser'
+import stateItems from '../utils/itemPool'
 
 class GameScene extends Scene {
   constructor() {
     super('game-scene')
   }
 
-  // Create a closure to protect state
+  // create a closure to protect state
   init() {
     let state = {
       stats: {
@@ -17,74 +18,12 @@ class GameScene extends Scene {
         fun: 0.1
       },
       ui: {
-        button_emoji: ['🥗', '🥪', '🍔', '🍦'],
         buttons: [],
         selectedBtn: null,
         placedBtn: null,
         uiBlocked: false
       },
-      itemPool: [
-        { type: 'good', text: '🧀' },
-        { type: 'good', text: '🥖' },
-        { type: 'good', text: '🥐' },
-        { type: 'good', text: '🥙' },
-        { type: 'good', text: '🥗' },
-        { type: 'good', text: '🌮' },
-        { type: 'good', text: '🥪' },
-        { type: 'good', text: '🍱' },
-        { type: 'good', text: '🍠' },
-        { type: 'good', text: '🍣' },
-        { type: 'good', text: '🍲' },
-        { type: 'good', text: '🍝' },
-        { type: 'good', text: '🥣' },
-        { type: 'good', text: '🥝' },
-        { type: 'good', text: '🍇' },
-        { type: 'good', text: '🍈' },
-        { type: 'good', text: '🍉' },
-        { type: 'good', text: '🍊' },
-        { type: 'good', text: '🍋' },
-        { type: 'good', text: '🍌' },
-        { type: 'good', text: '🍍' },
-        { type: 'good', text: '🍎' },
-        { type: 'good', text: '🍏' },
-        { type: 'good', text: '🍒' },
-        { type: 'good', text: '🍑' },
-        { type: 'good', text: '🍐' },
-        { type: 'good', text: '🍓' },
-        { type: 'good', text: '🍅' },
-        { type: 'good', text: '🍆' },
-        { type: 'good', text: '🌽' },
-        { type: 'good', text: '🥒' },
-        { type: 'good', text: '🥑' },
-        { type: 'good', text: '🥦' },
-        { type: 'good', text: '🥕' },
-        { type: 'bad', text: '🥨' },
-        { type: 'bad', text: '🥞' },
-        { type: 'bad', text: '🍟' },
-        { type: 'bad', text: '🌭' },
-        { type: 'bad', text: '🍔' },
-        { type: 'bad', text: '🍕' },
-        { type: 'bad', text: '🍿' },
-        { type: 'bad', text: '🍖' },
-        { type: 'bad', text: '🍗' },
-        { type: 'bad', text: '🥩' },
-        { type: 'bad', text: '🥡' },
-        { type: 'bad', text: '🥠' },
-        { type: 'bad', text: '🥟' },
-        { type: 'bad', text: '🍧' },
-        { type: 'bad', text: '🍦' },
-        { type: 'bad', text: '🥧' },
-        { type: 'bad', text: '🍨' },
-        { type: 'bad', text: '🍩' },
-        { type: 'bad', text: '🍪' },
-        { type: 'bad', text: '🎂' },
-        { type: 'bad', text: '🍭' },
-        { type: 'bad', text: '🍬' },
-        { type: 'bad', text: '🍫' },
-        { type: 'bad', text: '🍰' },
-        { type: 'bad', text: '🍮' },
-        { type: 'bad', text: '🍡' },
-      ],   
+      itemPool: stateItems,
       lastEaten: [],
       poopsPresent: 0,
       tweenQueue: []
@@ -92,16 +31,18 @@ class GameScene extends Scene {
 
     this.state = {
       getTweenQueue() {
-        return state.tweenQueue.slice()
+        return state.tweenQueue
       },
       updateTweenQueue(action, tween) {
-        let tweenQueue = this.getTweenQueue()
+        let newTweenQueue = state.tweenQueue.slice()
+
         action === 'add'
-        ? tweenQueue.push(tween)
+        ? newTweenQueue.push(tween)
         : action === 'remove'
-        ? tweenQueue[tweenQueue.find]
+        ? newTweenQueue.shift()
         : null
 
+        state.tweenQueue = newTweenQueue
       },
       getLastEaten() {
         return state.lastEaten.slice()
@@ -206,16 +147,15 @@ class GameScene extends Scene {
     data.renderBackground.call(this, width, height)
 
     // click twice for fullscreen text
-    if (screen.width < 420) {
+    if (this.scale.fullscreen.available) {
       this.timedEventClickText = this.time.addEvent({
         delay: 3000,
         repeat: 0,
-        callbackScope: this,
         callback: () => {
           let clickText = this.add.text( 
             width / 2, height / 2 - 80, 
-            "✌Tap twice for full screen", 
-            { font: "28px Arial", fill: "#ffffff" }
+            '✌Tap twice for full screen', 
+            { font: '28px Arial', fill: '#ffffff' }
           )
           .setDepth(10)
           .setOrigin(0.5, 0.5)
@@ -237,16 +177,11 @@ class GameScene extends Scene {
       })
     }
 
-    debugger
-
-    // click event for item placement
-    this.input.on('pointerdown', this.itemPlace, this)
-
     // init newItem
     this.newItem = {}
 
     // create HUD & UI
-    this.renderHUD(width)
+    this.initHUD(width)
     this.initBtns(width, height)
 
     // create ground
@@ -259,7 +194,7 @@ class GameScene extends Scene {
 
     // create pet
     this.pet = this.add
-      .text(width / 2, height / 2, '😍', { font: "64px Sans Open" })
+      .text(width / 2, height / 2, '😍', { font: '64px Sans Open' })
       .setInteractive({
         draggable: true,
         useHandCursor: true,
@@ -268,6 +203,7 @@ class GameScene extends Scene {
       .setPadding({ top: 6, })
       .setOrigin(0.5, 0.5)
 
+    // add custom methods to pet
     this.pet.setDefaultEmoji = () => {
       const stats = this.state.getStats()
 
@@ -312,33 +248,14 @@ class GameScene extends Scene {
       })
     }
 
-    // set up drag/drop form poop and pet
-    this.input.on('drag', (pointer, gameObject, target) => {
-      const validTargets = ['😲', '🤩', '😁', '🙂', '😔', '🤒', '💩']
-      if (!validTargets.includes(gameObject._text) ) { return }
-    
-      gameObject.body.setVelocity(0, 0)
-      gameObject.body.allowGravity = false
-      gameObject.x = pointer.x,
-      gameObject.y = pointer.y,
-      
-      gameObject._text == '💩' 
-        ? gameObject.move.pause() 
-        : gameObject.beingDragged()
-
-      this.input.once('pointerup', function(pointer, target) {
-        if (!validTargets.includes(target[0]._text)) { return }
-        target[0].body.allowGravity = true
-        target[0].falling()
-      })
-
-      this.input.once('pointerout', function(pointer, target) {
-        if (!validTargets.includes(target[0]._text)) { return }
-        target[0].body.allowGravity = true
-        target[0].falling()
-      })
-    })
-
+    this.pet.handleTweens = (tween) => {
+      const { updateTweenQueue } = this.state
+      if (this.tweens.isTweening(this.pet)) {
+          updateTweenQueue('add', tween)
+      } else {
+        tween.play()
+      }
+    }
 
     // create pet physics
     this.physics.add.existing(this.pet, false)
@@ -347,7 +264,8 @@ class GameScene extends Scene {
     this.pet.body.allowDrag = true
     this.physics.add.collider(this.pet, this.ground)
     this.pet.body.setCollideWorldBounds(true)   
-    
+
+    // create pet tweens
     this.pet.eatItem = this.tweens.createTimeline()
     this.pet.eatItem.add({
       targets: this.pet,
@@ -421,7 +339,7 @@ class GameScene extends Scene {
         duration: 100,
         x: { value: () => { return this.pet.x += 3 }},
         onStart: () => {
-          this.pet.setText("😣")
+          this.pet.setText('😣')
         }
       })
       this.pet.poop.add({
@@ -429,7 +347,7 @@ class GameScene extends Scene {
         duration: 100,
         x: { value: () => { return this.pet.x -= 3 }},
         onStart: () => {
-          this.pet.setText("😣")
+          this.pet.setText('😣')
         }
       })
     }
@@ -439,7 +357,7 @@ class GameScene extends Scene {
       duration: 100,
       y: { value: () => { return this.pet.y -30 }},
       onStart: () => {
-        this.pet.setText("😌")
+        this.pet.setText('😌')
       },
       onComplete: () => {
         incrementPoops()
@@ -454,8 +372,6 @@ class GameScene extends Scene {
         this.pet.poop.pause() 
       }
     })
-
-    this.pet.poop.play()
 
     this.pet.vomit = this.tweens.createTimeline()
     this.pet.vomit.add({
@@ -484,17 +400,51 @@ class GameScene extends Scene {
       offset: 2700,
       onComplete: () => {
         this.pet.setDefaultEmoji()
-        this.pet.vomit.pause() 
+        this.pet.vomit.pause()
       }
     });
 
+    // create event listeners
+
+    // click event for item placement
+    this.input.on('pointerdown', this.clickHandler, this) 
+
+    // drag/drop event for poop and pet
+    this.input.on('drag', (pointer, gameObject) => {
+      const validTargets = ['😲', '🤩', '😁', '🙂', '😔', '🤒', '💩']
+      if (!validTargets.includes(gameObject._text) ) { return }
+    
+      gameObject.body.setVelocity(0, 0)
+      gameObject.body.allowGravity = false
+      gameObject.x = pointer.x,
+      gameObject.y = pointer.y,
+      
+      gameObject._text == '💩' 
+        ? gameObject.move.pause() 
+        : gameObject.beingDragged()
+
+      this.input.once('pointerup', function(pointer, target) {
+        if (!validTargets.includes(target[0]._text)) { return }
+        target[0].body.allowGravity = true
+        target[0].falling()
+      })
+
+      this.input.once('pointerout', function(pointer, target) {
+        if (!validTargets.includes(target[0]._text)) { return }
+        target[0].body.allowGravity = true
+        target[0].falling()
+      })
+    })
+
+    // create timers
     this.timedEventPoop = this.time.addEvent({
       delay: 30000,
       repeat: -1,
       callback: () => {
-        this.pet.poop.play()
+        this.pet.handleTweens(this.pet.poop)
       },
     })
+
     this.timedEventStats = this.time.addEvent({
       delay: 1000,
       repeat: -1,
@@ -502,6 +452,30 @@ class GameScene extends Scene {
         this.decayStats()
       }
     })
+
+    this.timedEventTweens = this.time.addEvent({
+      delay: 500,
+      repeat: -1,
+      callback: () => {
+        const { updateTweenQueue, getTweenQueue } = this.state
+
+        if(getTweenQueue().length > 0 && !this.tweens.isTweening(this.pet)) { 
+          getTweenQueue()[0].play()
+          updateTweenQueue('remove', getTweenQueue[0])
+        }
+      }
+    })
+  }
+
+  clickHandler(e) {
+    const {lastDownTime} = this.clickHandler
+    this.itemPlace(e)
+
+    // double click check
+    if(lastDownTime && e.downTime - lastDownTime < 300) {
+      this.scale.toggleFullscreen()
+    }
+    this.clickHandler.lastDownTime = e.downTime
   }
 
   gameOver() {
@@ -510,11 +484,11 @@ class GameScene extends Scene {
     this.state.setSelectedBtn(null)
     this.tweens.killTweensOf(this.pet)
     this.timedEventStats.destroy()
-    this.pet.setText("💀")
+    this.pet.setText('💀')
 
     // start home-scene in 3 seconds
     const homeScene = this.time.addEvent({
-      delay: 3000,
+      delay: 5000,
       repeat: 0,
       callback: () => {
         this.scene.start('home-scene')
@@ -544,8 +518,7 @@ class GameScene extends Scene {
     let numBad = 0
     let numGood = 0
 
-    debugger
-    if(`${placedBtn.getData('type')}` === 'good') {
+    if(placedBtn.getData('type') === 'good') {
       incrementStats('health', 10)
     } else {
       incrementStats('fun', 10)
@@ -561,7 +534,7 @@ class GameScene extends Scene {
       }
 
       if(numBad >= 3) {
-        this.pet.vomit.play()
+        this.pet.handleTweens(this.pet.vomit)
         decrementStats('health', 15)
         setLastEaten('reset')
         
@@ -573,7 +546,6 @@ class GameScene extends Scene {
     }
   }
 
-
   initNewPoop() {
     const { width, height } = this.sys.game.config
     const { decrementPoops } = this.state
@@ -581,7 +553,7 @@ class GameScene extends Scene {
 
     this.poopEmoji.push(
       this.add
-        .text(this.pet.x, this.pet.y + 20, "💩", { font: "32px Arial Open" })
+        .text(this.pet.x, this.pet.y + 20, '💩', { font: '32px Arial Open' })
         .setDepth(5)
         .setInteractive({ useHandCursor: true })
         .setOrigin(0.5, 0)
@@ -589,7 +561,7 @@ class GameScene extends Scene {
 
     const newPoop = this.poopEmoji[this.poopEmoji.length - 1]
 
-    // init newPoopPhysics
+    // create newPoop physics
     this.physics.add.existing(newPoop, false)
     this.physics.add.collider(newPoop, this.ground)
     newPoop.body.setVelocity(0, 0)
@@ -597,7 +569,7 @@ class GameScene extends Scene {
     newPoop.body.setCollideWorldBounds(true)
     this.input.setDraggable(newPoop)
 
-    // init newPoop falling
+    // create custom methods for newPoop
     newPoop.falling = () => {
       const garbageCollider = this.physics.add.overlap(newPoop, this.garbage, null, () => {
         this.garbageGrow()
@@ -624,7 +596,6 @@ class GameScene extends Scene {
     }
     
 
-    // init newPoop.move Timeline
     newPoop.move = this.tweens.createTimeline()
     newPoop.move.direction = 'east'
     newPoop.flipX = true
@@ -634,14 +605,14 @@ class GameScene extends Scene {
       ease: 'Expo.easeOut',
       x: {
         value: {
-          getEnd: function (target, key, value) {
+          getEnd: function (target) {
             if(newPoop.move.direction == 'east') {
               return target.x + 10
             } else {
               return target.x - 10
             }
           },
-          getStart: function (target, key, value) {
+          getStart: function (target) {
             return target.x
           }
         }
@@ -655,14 +626,14 @@ class GameScene extends Scene {
       ease: 'Expo.easeOut',
       x: {
         value: {
-          getEnd: function (target, key, value) {
+          getEnd: function (target) {
             if (newPoop.move.direction == 'east') {
               return target.x + 20
             } else {
               return target.x - 20
             }
           },
-          getStart: function (target, key, value) {
+          getStart: function (target) {
             if (newPoop.move.direction == 'east') {
               return target.x + 10
             } else {
@@ -680,14 +651,14 @@ class GameScene extends Scene {
       ease: 'Expo.easeOut',
       x: {
         value: {
-          getEnd: function (target, key, value) {
+          getEnd: function (target) {
             if (newPoop.move.direction == 'east') {
               return target.x + 30
             } else {
               return target.x - 30
             }
           },
-          getStart: function (target, key, value) {
+          getStart: function (target) {
             if (newPoop.move.direction == 'east') {
               return target.x + 20
             } else {
@@ -735,21 +706,21 @@ class GameScene extends Scene {
   initBtns(width, height) {
     const fontSize = 44
     let btns = []
-  // init buttons if none exist
+
     btns.push(this.add
-      .text(width / 2 - (fontSize * 3), height - (fontSize / 2), "🥗", { font:`${fontSize}px Sans Open` })
+      .text(width / 2 - (fontSize * 3), height - (fontSize / 2), '🥗', { font:`${fontSize}px Sans Open` })
     )
     
     btns.push(this.add
-      .text(width / 2 - (fontSize * 1), height - (fontSize / 2), "🥪", { font:`${fontSize}px Sans Open` })
+      .text(width / 2 - (fontSize * 1), height - (fontSize / 2), '🥪', { font:`${fontSize}px Sans Open` })
     )
 
     btns.push(this.add
-      .text(width / 2 + (fontSize * 1), height - (fontSize / 2), "🍔", { font: `${fontSize}px Sans Open` })
+      .text(width / 2 + (fontSize * 1), height - (fontSize / 2), '🍔', { font: `${fontSize}px Sans Open` })
     )
     
     btns.push(this.add
-      .text(width / 2 + (fontSize * 3), height - (fontSize / 2), "🍦", { font: `${fontSize}px Sans Open` })
+      .text(width / 2 + (fontSize * 3), height - (fontSize / 2), '🍦', { font: `${fontSize}px Sans Open` })
     )
     
     // configure btns
@@ -766,7 +737,7 @@ class GameScene extends Scene {
         .setOrigin(0.5, 1)
       btn.input.hitArea.width = btn.input.hitArea.height
 
-      // adding custom methods to each btn
+      // create custom methods for each btn
       btn.textPicker = () => {
         const {getItemPool, setOneUIBtn, getUIBtns} = this.state
         const items = getItemPool()
@@ -862,23 +833,23 @@ class GameScene extends Scene {
         this.pet.eatItem.play()
       }
     })
-    moveToItemTween.play()
+    this.pet.handleTweens(moveToItemTween)
   }
 
-  renderHUD(width) {
+  initHUD(width) {
     const barWidth = 108
     const barHeight = 38
 
     // create bar labels
     this.healthText = this.add
-      .text(46, 4, '👩‍⚕️', { font: "32px Arial", fill: '#eba300', bold: true })
+      .text(46, 4, '👩‍⚕️', { font: '32px Arial', fill: '#eba300', bold: true })
       .setDepth(2)
     
     this.funText = this.add
-      .text(width - (barWidth + 46), 4, '🤹‍♀️', { font: "32px Arial", fill: '#eba300', bold: true })
+      .text(width - (barWidth + 46), 4, '🤹‍♀️', { font: '32px Arial', fill: '#eba300', bold: true })
       .setDepth(2)
 
-    // create health bar
+    // create bar borders
     this.healthBar = this.add.graphics()
       .setPosition(46, 40)
       .lineStyle(4, 0xeba300)
@@ -891,7 +862,7 @@ class GameScene extends Scene {
       .strokeRect(0, 0, barWidth, barHeight)
       .setDepth(2)
     
-    //create value bar 
+    //create bar values 
     this.healthBarValue = this.add.graphics()
       .setPosition(46 + 4, 40 + 4)
       .setDepth(2)
