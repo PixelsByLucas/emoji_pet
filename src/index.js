@@ -2,10 +2,10 @@ import Phaser from 'phaser'
 import LoadingScene from './scenes/LoadingScene'
 import HomeScene from './scenes/HomeScene'
 import GameScene from './scenes/GameScene'
-
+// 
 var config = {
     type: Phaser.AUTO,
-    parent: 'game-container',
+    parent: 'body',
     title: 'Emoji Pet',
     pixelArt: false,
     width: 360,
@@ -14,7 +14,7 @@ var config = {
     scale: {
         parent: 'game-container',
         mode: Phaser.Scale.FIT,
-        autoCenter: true,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
         fullscreenTarget: 'game-container'
     },
     physics: {
