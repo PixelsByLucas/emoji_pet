@@ -1,4 +1,4 @@
-import Phaser, { Scene } from 'phaser'
+import { Scene } from 'phaser'
 import stateItems from '../utils/itemPool'
 
 class GameScene extends Scene {
