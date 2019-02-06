@@ -209,7 +209,7 @@ class GameScene extends Scene {
 
       if (stats.fun < stats.health) {
         if (stats.fun > 90) {
-          this.pet.setText('🤩')
+          this.pet.setText('😁')
         } else if (stats.fun > 50) {
           this.pet.setText('🙂')
         } else {
@@ -217,7 +217,7 @@ class GameScene extends Scene {
         }
       } else {
         if (stats.health > 90) {
-          this.pet.setText('😁')
+          this.pet.setText('😍')
         } else if (stats.health > 50) {
           this.pet.setText('🙂')
         } else {
